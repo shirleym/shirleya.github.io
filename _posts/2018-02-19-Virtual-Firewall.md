@@ -34,7 +34,7 @@ Here we use VM1 and VM2 as two guests on two different physical desktop machines
 
 Network Configuration:
 
-![VM_setup](/assets/network_config.PNG){:class="img-responsive"}
+![network_config](/assets/network_config.PNG){:class="img-responsive"}
 
 FW:
 Adapter1: A bridged adapter so that it receives IP from the host’s wifi network.
@@ -42,7 +42,7 @@ Adapter2: An internal network adapter so that it can communicate with the VM1, w
 Use VirtualBox’s VBoxManage to setup a dhcp server so that the FW and VM1 can get IP address on the internal network. In the following example, we use “intnet” as internal network.
 
 
-![VM_setup](/assets/command1.PNG){:class="img-responsive"}
+![command1](/assets/command1.PNG){:class="img-responsive"}
 
 VM1:
 Adapter1: An internal network adapter same as FW.
@@ -53,12 +53,12 @@ Adapter1: A bridged adapter that receives IP from the host’s wifi network.
 Then start the respective VMs.
 Once the VMs are started, check if the interfaces on the VMs get IP address. If not manually add entries to /etc/network/interfaces file to get IP from dhcp and then reboot.
 
-![VM_setup](/assets/interface_file.PNG){:class="img-responsive"}
+![interface_file](/assets/interface_file.PNG){:class="img-responsive"}
 
 Routing:
 To enable forwarding on FW, that is to forward packets from one network card to another. We run the following command in the VM terminal.
 
-![VM_setup](/assets/command2.PNG){:class="img-responsive}
+![command2](/assets/command2.PNG){:class="img-responsive}
 
 However the VM2 and VM1 cannot communicate with each other. Hence we need to setup a static route on both so that the traffic between them passes through FW.
 
@@ -66,11 +66,11 @@ However the VM2 and VM1 cannot communicate with each other. Hence we need to set
 For eg:
 VM2 connected over WiFi:
 
-![VM_setup](/assets/command3.PNG){:class="img-responsive}
+![Command3](/assets/Command3.PNG){:class="img-responsive}
 
 VM1 on internal network:
 
-![VM_setup](/assets/command4.PNG){:class="img-responsive}
+![Command4](/assets/Command4.PNG){:class="img-responsive}
 
 Once the static routes are added, make sure VM1 and VM2 can ping each other before adding any iptables rule.
 
@@ -81,7 +81,7 @@ Sudo apt-get install libnetfilter-conntrack-dev
 Iptables rule to be added on FW to pass traffic on the forward hook to the NFQUEUE
 
 
-![VM_setup](/assets/command5.PNG){:class="img-responsive}
+![Command5](/assets/Command5.PNG){:class="img-responsive}
 
 
 Add the same rule in the reverse direction as well.
@@ -89,21 +89,21 @@ Add the same rule in the reverse direction as well.
 Rule Table on FW :
 Example based on Lab2 Scenarios: “rules.txt”
 
-![VM_setup](/assets/rules.PNG){:class="img-responsive}
+![rules](/assets/rules.PNG){:class="img-responsive}
 
 Compile the code:
-![VM_setup](/assets/command6.PNG){:class="img-responsive}
+![Command6](/assets/Command6.PNG){:class="img-responsive}
 
 Running the code:
 Note: Make sure rules.txt is in same directory as the source code before running the code.
 
-![VM_setup](/assets/command7.PNG){:class="img-responsive}
+![command7](/assets/command7.PNG){:class="img-responsive}
 
 Rules Tested:
 1.  Allow Ping from the Lan interface to the Wifi interface. (Flow level classification). Verify your settings:
 ping 192.168.1.100 from 192.168.0.21 Should get through
 
-![VM_setup](/assets/rules2.PNG){:class="img-responsive}
+![rules2](/assets/rules2.PNG){:class="img-responsive}
 
 
 Note:  The 7th column represents flag/type and here it means ICMP_TYPE, ie echo-request is 8 and icmp-reply is 0
@@ -117,19 +117,19 @@ iperf -s -p 5001 <from 192.168.1.100>
 iperf -c 192.168.1.100 -p 5001 <from 192.168.0.21>
 Should get through.
 
-![VM_setup](/assets/rules3.PNG){:class="img-responsive}
+![rules3](/assets/rules3.PNG){:class="img-responsive}
 
 3. Allow ssh services initiated from LAN to wifi. Deny ssh services initiated from firewall to LAN (Stateful firewall rules).
 Verify your settings: ssh <your username>@192.168.0.21    <from 192.168.1.100>.Should get successfully accessed.
 Verify your settings: ssh <your username>@192.168.1.100    <from 192.168.0.21>. Should get stuck.
 
-![VM_setup](/assets/rules4.PNG){:class="img-responsive}
+![rules4](/assets/rules4.PNG){:class="img-responsive}
 
 
 Note: The second-last says this rule expects stateful inspection, and the last column represents the tcp states allowed. For eg: for NEW state, the tcp states allowed are from NONE(0),SYN_SENT(1),SYN_RECV(2)
 
 
-![VM_setup](/assets/states.PNG){:class="img-responsive}
+![states](/assets/states.PNG){:class="img-responsive}
 
 4. Drop SYN-ACK packets destine to 192.168.1.100:10000. Allow SYN and ACK packets destine to 192.168.1.100:10000 (Packet level classification).
 Verify your settings:
@@ -137,7 +137,7 @@ Use hping3 http://www.hping.org/manpage.html
 Or scapy http://www.secdev.org/projects/scapy/doc/usage.html
 to send an individual SYN/SYN-ACK/ACK packet to 192.168.0.21. The SYN-ACK should get dropped while the SYN/ACK should get through.
 
-![VM_setup](/assets/rules5.PNG){:class="img-responsive}
+![rules5](/assets/rules5.PNG){:class="img-responsive}
 
 Note: An iperf server was started at the destination with port 10000 to observe syn-ack packets being blocked, i.e; when a syn packet is sent to port 10000, the port replies with syn-ack but the packet is blocked by firewall. Just sending a syn-ack packet without running a tcp server at destination will not block syn-ack packet and a reset packet is received at the sending host.
 
@@ -145,7 +145,7 @@ Note: An iperf server was started at the destination with port 10000 to observe 
 Follow https://help.ubuntu.com/lts/serverguide/ftp-server.html or other opensource FTP server (with no encryption) to setup a ftp at 192.168.1.100. Transmit a txt file from 192.168.0.21 to 192.168.1.100 using FTP containing “piratebay”.
 Suppose the txt file contains “piratebay”, an empty file gets transferred. Otherwise the file should be successfully transmitted.
 
-![VM_setup](/assets/rules6.PNG){:class="img-responsive}
+![rules6](/assets/rules6.PNG){:class="img-responsive}
 
 Note: When a file without the pattern is being transferred, the file gets transferred successfully to destination. However, if a file with the pattern piratebay is being transferred, we apply the pattern action i.e NF_DROP in this case, and the connection is stuck and an empty file is created at destination.
 
@@ -155,3 +155,22 @@ By default any packet that does not match any rule in the file rules.txt, will b
 
 Code:netfil_m.c
 Rules:rules.txt
+
+
+{% highlight c %}
+//Libraries
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <netinet/in.h>
+#include <linux/types.h>
+#include <linux/netfilter.h>
+#include <linux/ip.h>
+#include <linux/tcp.h>
+#include <linux/udp.h>
+#include <linux/icmp.h>
+#include <arpa/inet.h>
+#include <libnetfilter_queue/libnetfilter_queue.h>
+#include <libnetfilter_conntrack/libnetfilter_conntrack.h>
+{% endhighlight %}

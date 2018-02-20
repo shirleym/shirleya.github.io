@@ -1,11 +1,13 @@
 ---
 layout: default
-cover_image: /assets/back.JPG
-header_text_color: "rbga(255, 255, 255, 1.0)"
-site_header_text_color: "rgba(105, 81, 62, 0.8)"
-site_header_border_color: "rgba(105, 81, 62, 0.5)"
 ---
-
+<header
+{% if page.cover_image %}
+class="cover-banner" 
+style="background-image: url({{ page.cover_image }});"
+{% endif %}
+>
+  
 <h1>{{ page.title }}</h1>
 <p class="meta">{{ page.date | date_to_string }}</p>
 

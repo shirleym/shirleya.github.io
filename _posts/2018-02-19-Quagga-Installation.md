@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Quagga Installation and Configuration: Ubuntu Server 16.04(rtr and int-rtr)"
+title: "Quagga Installation and Configuration: Ubuntu Server 16.04"
 date: 2018-02-19
 ---
 

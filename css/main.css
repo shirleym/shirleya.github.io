@@ -41,7 +41,10 @@ ul.posts {
 ul.posts li {
     list-style: none;
 }
-
+.TitleBanner {
+  background-size: cover;
+  background-position: center;
+}
 .cover-banner {
 	width: 100%;
 	height: 100vh;

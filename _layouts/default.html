@@ -6,7 +6,12 @@
 			<link rel="stylesheet" type="text/css" href="/css/main.css">
 		</head>
 		<body>
-
+			<header
+			{% if page.cover_image %}
+			class="cover-banner" 
+			style="background-image: url({{ page.cover_image }});"
+			{% endif %}
+			>
 			<nav>
 	    		<ul>
 	        		<li><a href="/">Home</a></li>

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "My Final Project, Virtual Firewall"
+title: "Virtual Firewall Project"
 date: 2018-02-19
 ---
 
